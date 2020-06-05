@@ -6,124 +6,119 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:10 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/03 21:17:52 by rarce            ###   ########.fr       */
+/*   Updated: 2020/06/05 15:28:24 by rarce            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+#include <stdio.h>
 #include "get_next_line.h"
-
-void ft_putstr(char *s)
-{
-	int counter = 0;
-	
-	while (s[counter] != '\0')
-	{
-		write(1, &s[counter],1);
-		counter++;
-	}
-}
-
-void ft_putstrn(char *s, int n)
-{
-	int counter = 0;
-	int d;
-	
-	while (counter < n)
-	{
-		write(1, &s[counter],1);
-		counter++;
-	}
-}
-
-int		ft_strlen(char *tab)
-{
-	int counter;
-	
-	counter = 0;
-	while (tab && tab[counter] != '\0')
-		counter++;
-	return (counter);
-}
-/*-----------------*/
-char	*ft_newstr(char *tab, int size)
-{
-	char	*ptr;
-	int		counter;
-	
-	if(!(ptr = (char *)malloc(sizeof(ft_strlen(tab) + size + 1))))
-		return (NULL);
-	counter = 0;
-	while(tab[counter] != '\0')
-	{
-		ptr[counter] = tab[counter];
-		counter ++;
-	}
-	while (size--)
-		ptr[counter++] = '\0';
-	return (ptr);
-}
-
-void *ft_strcpy(char *dst, char *src, int n)
-{
-	int counter;
-	int start;
-	
-	counter = 0;
-	start = ft_strlen(dst);
-	while(src && counter < n && src[counter] != '\0')
-	{
-		dst[start + counter] = src[counter];
-		counter++;}
-	dst[start + counter] = '\0';
-}
 
 
 int	get_next_line(int fd, char **line)
 {
 	static char	buf[BUFFER_SIZE + 1];
+	static int	ret;
 	static int	counter;
 	static int	start;
+	static char *tmp;
 
+	int a= 1;
 	if (!line || fd < 1 || BUFFER_SIZE < 1 || read(fd, buf, 0) == -1)
 		return (-1);
-	while (fd = read(fd,  buf, BUFF_SIZE ))
+	while ((ret = read(fd, buf, BUFFER_SIZE)) > 1 )
 	{
-		buf[fd] = '\0' ;/*add a end of string at the end*/
+		ft_putstr("ret=");
+		ft_putnbr(ret);
+		buf[ret] = '\0'; /*add a end of string at the end*/
+		*line = ft_newstr("",0);
+		
+		
 		counter = 0;
 		start = 0;
 
-		line = ft_newstr("",0);
-		
-	ft_putstr("this is buf = ");
-	ft_putstrn(buf,BUFFER_SIZE+1);
+							ft_putstr("\nALL buf = ");  /////////////
+							ft_putstrn(buf,ret);//////////////
 
-	ft_putstr("\n------------------\n");
-		while (buf[counter])
+		while (buf[counter] != '\0')
 		{
-			if (buf[counter] != '\n')
+/*******************************************************************/
+			ft_putstr("\n---------------------------------------------------------------\n");
+			ft_putstr("counter = ");
+			ft_putnbr(counter);
+			
+				ft_putstr("\tbuf[");
+				ft_putnbr(counter);
+				ft_putstr("]=");
+			write(1,&buf[counter], 1);
+			ft_putstr("\n---------------------------------------------------------------\n");
+/************************************************************************/
+
+			if (buf[counter] == '\n' && buf[counter + 1])
 			{
-				printf("return (1) - found line");
-				tmp = ft_newstr(line, ft_strlen(line) + counter - start ); /* create a tmp for line + buff new line*/
-				ft_strcpy(tmp, line, 0, ft_strlen(tmp));  /*first copy lines*/
-				free(line); /* then free lines*/
-				line = tmp; /* make line the new sized tmp */
-				ft_strcpy(line, buf[start], counter);  /*now add buff lines*/
+				ft_putstr("yes got in\n");
+				
+				if (!(tmp = ft_newstr( *line, ft_strlen(*line) + counter - start + 1)))// create a tmp for line + buff new line
+				   return (-1);
+																										ft_putstr(" -- a1 - create space by newstr for tmp-----\n");
+				ft_strcpy(tmp, *line, ft_strlen(tmp));  //first copy lines
+																										ft_putstr(" -- a2 - copy line to tmp-----\n");
+				free(*line); //then free lines
+																										ft_putstr(" -- a3 - free line ----\n");
+
+				line = &tmp; // make line the new sized tmp 
+																								ft_putstr(" -- a4 - copy tmp to line (now line has more space)----\n");
+																											ft_putstr("line [before] =");
+																											ft_putnbr(ft_strlen(*line) + counter - start + 1);
+																											ft_putstrn(*line,ft_strlen(*line) + counter - start + 1);
+																											ft_putstr("\n");
+
+				ft_strcpy(*line, &buf[start], counter);  //now add buff lines
+																											ft_putstr(" -- a5 - copy buf to line ----\n");	
+																											ft_putstr("&buf[start]=");
+																											ft_putstr(&buf[start]);
+																											ft_putstr("\n");
+																											ft_putstr("line [after] =");
+																											ft_putstrn(*line,ft_strlen(*line) + counter - start + 1);
+																											ft_putstr("\n");
+
+
+
 				if (buf[start + counter + 1] && buf[start + counter + 1] != '\0')
 					start = counter + 1;
 			}
-			if (buf[counter] != '\0')
-			{
-				printf("return (0) - end of doc");
-				tmp = ft_newstr(line, ft_strlen(line) + counter - start ); /* create a tmp for line + buff new line*/
-				ft_strcpy(tmp, line, 0, ft_strlen(tmp));  /*first copy lines*/
-				free(line); /* then free lines*/
-				line = tmp; /* make line the new sized tmp */
-				ft_strcpy(line, buf[start], counter);  /*now add buff lines*/
-			 }
-
 			counter++;
-		}
 
+			if (buf[counter] == '\0')
+			{
+
+				ft_putstr("yes got in\n");
+				
+				if (!(tmp = ft_newstr( *line, ft_strlen(*line) + counter - start + 1)))// create a tmp for line + buff new line
+				   return (-1);
+																										ft_putstr(" -- b1 - create space by newstr for tmp-----\n");
+				ft_strcpy(tmp, *line, ft_strlen(tmp));  //first copy lines
+																										ft_putstr(" -- b2 - copy line to tmp-----\n");
+				free(*line); //then free lines
+																										ft_putstr(" -- b3 - free line ----\n");
+
+				line = &tmp; // make line the new sized tmp 
+																								ft_putstr(" -- b4 - copy tmp to line (now line has more space)----\n");
+																											ft_putstr("line [before] =");
+																											ft_putnbr(ft_strlen(*line) + counter - start + 1);
+																											ft_putstrn(*line,ft_strlen(*line) + counter - start + 1);
+																											ft_putstr("\n");
+
+				ft_strcpy(*line, &buf[start], counter);  //now add buff lines
+																											ft_putstr(" -- b5 - copy buf to line ----\n");	
+																											ft_putstr("&buf[start]=");
+																											ft_putstr(&buf[start]);
+																											ft_putstr("\n");
+																											ft_putstr("line [after] =");
+																											ft_putstrn(*line,ft_strlen(*line) + counter - start + 1);
+																											ft_putstr("\n");
+				printf("return (0) - end of doc");		 
+				a = 0;
+			}
+		}
 	}
 	return (0);
 }

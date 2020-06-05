@@ -6,66 +6,97 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:41 by rarce             #+#    #+#             */
-/*   Updated: 2020/05/25 18:36:25 by rarce            ###   ########.fr       */
+/*   Updated: 2020/06/04 17:44:53 by rarce            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strnew(char *ptr, size_t size)
+void ft_putchar(char c)
 {
-	int counter;
-	
-	if (!(ptr = (char *)malloc(sizeof(char) * (size +1))))
-		return (NULL);
-	counter = 0;
-	while (counter < size + 1)
-	{
-		ptr[counter] = '\0';
-		counter++;
-	}
-	return (ptr);
+	write(1, &c, 1);
 }
 
-int		ft_strlen(char *s)
+void	ft_putnbr(int nb)
+{
+	if (nb < 10 && nb >= 0)
+	{
+		ft_putchar(nb + '0');
+	}
+	else if (nb >= 10)
+	{
+		ft_putnbr(nb / 10);
+		ft_putchar(nb % 10 + '0');
+		if (nb < 0)
+			ft_putchar('-');
+	}
+	else
+	{
+		ft_putchar('-');
+		ft_putnbr(nb * -1);
+	}
+}
+void ft_putstr(char *s)
+{
+	int counter = 0;
+
+	while (s[counter] != '\0')
+	{
+		write(1, &s[counter],1);
+		counter++;
+	}
+}
+
+void ft_putstrn(char *s, int n)
+{
+	int counter = 0;
+	int d;
+
+	while (counter < n)
+	{
+		write(1, &s[counter],1);
+		counter++;
+	}
+}
+
+int		ft_strlen(char *tab)
 {
 	int counter;
 
 	counter = 0;
-	while (s[counter] != '\0')
+	while (tab && tab[counter] != '\0')
 		counter++;
 	return (counter);
 }
-
-char	*ft_strdup(char *dest, char *src)
+/*-----------------*/
+char	*ft_newstr(char *tab, int size)
 {
 	char	*ptr;
 	int		counter;
-	int		start;
-	
-	if (!(ptr = ft_strnew(ptr, ft_strlen(dest) + ft_strlen(src))))
+
+	if(!(ptr = (char *)malloc(sizeof(ft_strlen(tab) + size + 1))))
 		return (NULL);
-	start = 0;
-	while (dest[start] != '\0')
-	{
-		ptr[start] = dest[start];
-		start++;
-	}
 	counter = 0;
-	while (src[counter] != '\0')
+	while(tab[counter] != '\0' && tab != NULL)
 	{
-		ptr[start + counter] = src[counter];
-		counter++;
+		ptr[counter] = tab[counter];
+		counter ++;
 	}
-	ptr[start + counter] = '\0';
+	while (size--)
+		ptr[counter++] = '\0';
 	return (ptr);
 }
 
-void ft_putstrn(char *s)
+void *ft_strcpy(char *dst, char *src, int n)
 {
 	int counter;
+	int start;
 
 	counter = 0;
-	while (counter < ft_strlen(s))
-		write(1, &s[counter++], 1);
+	start = ft_strlen(dst);
+	while(src && counter < n && src[counter] != '\0')
+	{
+		dst[start + counter] = src[counter];
+		counter++;}
+	dst[start + counter] = '\0';
 }
