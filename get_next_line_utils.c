@@ -6,58 +6,11 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:41 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/04 17:44:53 by rarce            ###   ########.fr       */
+/*   Updated: 2020/06/09 18:27:57 by roberto          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-void ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
-
-void	ft_putnbr(int nb)
-{
-	if (nb < 10 && nb >= 0)
-	{
-		ft_putchar(nb + '0');
-	}
-	else if (nb >= 10)
-	{
-		ft_putnbr(nb / 10);
-		ft_putchar(nb % 10 + '0');
-		if (nb < 0)
-			ft_putchar('-');
-	}
-	else
-	{
-		ft_putchar('-');
-		ft_putnbr(nb * -1);
-	}
-}
-void ft_putstr(char *s)
-{
-	int counter = 0;
-
-	while (s[counter] != '\0')
-	{
-		write(1, &s[counter],1);
-		counter++;
-	}
-}
-
-void ft_putstrn(char *s, int n)
-{
-	int counter = 0;
-	int d;
-
-	while (counter < n)
-	{
-		write(1, &s[counter],1);
-		counter++;
-	}
-}
 
 int		ft_strlen(char *tab)
 {
@@ -68,35 +21,61 @@ int		ft_strlen(char *tab)
 		counter++;
 	return (counter);
 }
-/*-----------------*/
+
 char	*ft_newstr(char *tab, int size)
 {
 	char	*ptr;
 	int		counter;
 
-	if(!(ptr = (char *)malloc(sizeof(ft_strlen(tab) + size + 1))))
+	if (!(ptr = (char *)malloc(sizeof(ft_strlen(tab) + size + 1))))
 		return (NULL);
 	counter = 0;
-	while(tab[counter] != '\0' && tab != NULL)
+	while (tab[counter] != '\0' && tab != NULL)
 	{
 		ptr[counter] = tab[counter];
-		counter ++;
+		counter++;
 	}
-	while (size--)
+	while (size-- + 1)
 		ptr[counter++] = '\0';
 	return (ptr);
 }
 
-void *ft_strcpy(char *dst, char *src, int n)
+void	*ft_strcpy(char *dst, char *src, int n)
 {
 	int counter;
 	int start;
 
 	counter = 0;
 	start = ft_strlen(dst);
-	while(src && counter < n && src[counter] != '\0')
+	while (src && counter < n && src[counter] != '\0')
 	{
 		dst[start + counter] = src[counter];
-		counter++;}
+		counter++;
+	}
 	dst[start + counter] = '\0';
+	return (0);
+}
+
+int		bla(char **line, int counter, int start, char *buf)
+{
+	char *tmp;
+
+	if (!(tmp = ft_newstr(*line, ft_strlen(*line) + counter - start)))
+		return (-1);
+	if (buf[counter] == '\n')
+		ft_strcpy(*line, &buf[start], counter - start);
+	else
+		ft_strcpy(*line, &buf[start], counter - start - 1);
+	free(tmp);
+	if (buf[counter + 1] != '\0')
+		start = counter + 1;
+	return (start);
+}
+
+void	init(char *buf, char **line, int *counter, int *start)
+{
+	buf[0] = '\0';
+	*line = ft_newstr("", 0);
+	*counter = 0;
+	*start = 0;
 }

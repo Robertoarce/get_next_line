@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/04 10:47:06 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/04 16:47:27 by rarce            ###   ########.fr       */
+/*   Updated: 2020/06/09 19:11:18 by roberto          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <unistd.h>
@@ -29,14 +29,14 @@ int	main(void)
 	while ((ret = get_next_line(fd, &line)) == 1)
 	{
 		printf("%3d : %s \n", ++i, line);
-		free(line);
+	//	free(line);
 	}
 	if (ret == -1)
 		printf("error\n");
 	else if (ret == 0)
 	{
 		printf("at EOF: [%s]\n", line);
-		free(line);
+	//	free(line);
 		printf("EOF\n");
 	}
 	close(fd);
