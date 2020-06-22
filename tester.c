@@ -6,39 +6,30 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/04 10:47:06 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/09 19:11:18 by roberto          ###   ########.fr       */
+/*   Updated: 2020/06/19 09:35:50 by roberto          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <fcntl.h>
-#include <limits.h>
+#include <stdio.h>
 #include "get_next_line.h"
 
-int	main(void)
+int main()
 {
-	int		i;
-	int		fd;
-	char	*line;
-	int		ret;
-	
-	printf("BUFFER_SIZE = %d\n", BUFFER_SIZE);
+	int fd;
+	int r;
+	char *l;
+
 	fd = open("42", O_RDONLY);
-	i = 0;
-	while ((ret = get_next_line(fd, &line)) == 1)
+	while((r = get_next_line(fd, &l))> 0)
 	{
-		printf("%3d : %s \n", ++i, line);
-	//	free(line);
+		printf("%d |%s\n", r, l);
+		free(l);
 	}
-	if (ret == -1)
-		printf("error\n");
-	else if (ret == 0)
-	{
-		printf("at EOF: [%s]\n", line);
-	//	free(line);
-		printf("EOF\n");
-	}
-	close(fd);
+	if (r == -1)
+		l = NULL;
+	printf("%d |%s\n", r, l);
+	if (l)
+		free(l);
+	//while(1);
 	return (0);
 }
