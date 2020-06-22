@@ -6,7 +6,7 @@
 /*   By: roberto <rarce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 18:08:45 by roberto           #+#    #+#             */
-/*   Updated: 2020/06/19 17:14:07 by roberto          ###   ########.fr       */
+/*   Updated: 2020/06/22 18:44:58 by rarce            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,86 +18,83 @@ int		get_next_line(int fd, char **line)
 	char		buf[BUFFER_SIZE + 1];
 	int			read_size;
 	int			cut;
-	int	bklen=0;
 	char		*tmp;
 
 	if (!line || fd < 0 || BUFFER_SIZE < 1 || read(fd, buf, 0) < 0)
 		return (-1);
 
-	cut = 0;
-	*line = ft_strnew(0);
+	/*------block 1 START--------*/
+	if (!fd_backup[fd])
+		fd_backup[fd] = ft_strnew(0); 
+	/*------block 1 END--------*/
+
 
 	while ((read_size = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 
-		buf[read_size] = '\0';
-		
-		if (!fd_backup[fd])
-			fd_backup[fd] = ft_strnew(0); 
-		
 
+		buf[read_size] = '\0';
+	/*------block 2 = STOCK ALL BUF in BACKUP= START--------*/
 		cut = ft_strlen(buf);
-		bklen= ft_strlen(fd_backup[fd]);
-		tmp = ft_strnew( bklen + cut);
-		ft_strncpy (tmp,fd_backup[fd], bklen);
-		ft_strncpy (tmp,buf ,cut);
+		tmp = ft_strnew(cut);
+		
+		if (cut > 0) //buf not empty
+		{
+			ft_strncpy(&tmp,fd_backup[fd],ft_strlen(fd_backup[fd]));
+			ft_strncpy(&tmp,buf,cut);
+		}
 		free(fd_backup[fd]);
 		fd_backup[fd] = tmp;
 
-//		if(!(fd_backup[fd] = ft_strjoin(&fd_backup[fd],buf, cut))) /*add all buf*/
-//			return(-1);
+	/*------block 2 END --------*/
+ 
+			cut = ft_findnl(fd_backup[fd]); 
 		
-		if (ft_findchar(fd_backup[fd], '\n') > -1) /* there is a new line in backup */
-		{
-
-			cut = ft_findchar(fd_backup[fd], '\n'); 
-	//		if(*line)
-	//			free(*line);
-			if(!(*line = ft_strnew(cut)))
+		if (  cut > -1 ) /* there is a \n new line. */
+		{ 
+			if (!(*line = ft_strnew(cut)))
 					return (-1);
-			ft_strncpy(&**line,fd_backup[fd], cut);
+			ft_strncpy(&*line,fd_backup[fd], cut); /*copy backup[:cut] to line*/
 			
-			bklen = ft_strlen(&fd_backup[fd][cut + 1]);
-		if(!(tmp = ft_strnew(bklen))) /*tmp up becomes the rest*/
-				return (-1);
-			ft_strncpy(tmp,&fd_backup[fd][cut + 1],bklen);
 
+			cut  = ft_strlen(&fd_backup[fd][cut + 1]);
+		if(!(tmp = ft_strnew(cut)))
+				return (-1);
+			ft_strncpy(&tmp, &fd_backup[fd][cut + 1], cut); /*copy backup[cut:] to tmp*/
 			free(fd_backup[fd]); /*free backup*/
 			fd_backup[fd] = tmp; /*assign backup*/
-		
+			
 		return (1);
 		}
 	}
-	while ( ft_findchar(fd_backup[fd],'\n') )
+	
+	/* Nothing else to read
+	 * all is in fd_backup[fd]*/
+
+	cut = ft_findnl(fd_backup[fd]); 
+	if ( cut  > -1 ) /* There is a line but we dont know if is the end*/
 	{
-
-			cut = ft_findchar(fd_backup[fd], '\n'); 
-	//		if(*line)
-	//			free(*line);
-			if(!(*line = ft_strnew(cut)))
-					return (-1);
-			ft_strncpy(&**line,fd_backup[fd], cut);
-			
-			bklen = ft_strlen(&fd_backup[fd][cut + 1]);
-		if(!(tmp = ft_strnew(bklen))) /*tmp up becomes the rest*/
+		if (!(*line = ft_strnew(cut)))
 				return (-1);
-			ft_strncpy(tmp,&fd_backup[fd][cut + 1],bklen);
-
-			free(fd_backup[fd]); /*free backup*/
-			fd_backup[fd] = tmp; /*assign backup*/
+		ft_strncpy(&*line,fd_backup[fd], cut); /*copy backup[:cut] to line*/
 		
+		cut  = ft_strlen(&fd_backup[fd][cut + 1]);
+		if(!(tmp = ft_strnew(cut)))
+			return (-1);
+		ft_strncpy(&tmp, &fd_backup[fd][cut + 1],cut); /*copy backup[cut:] to tmp*/
+		free(fd_backup[fd]); /*free backup*/
+		fd_backup[fd] = tmp; /*assign backup*/
+			
 		return (1);
 	}
 
-	/*   It arrived to the EoF no new line '\n'  */			
-
-			if(!(*line = ft_strnew(cut)))
-					return (-1);
-			ft_strncpy(&**line,fd_backup[fd], cut);
-			
-			bklen = ft_strlen(&fd_backup[fd][cut + 1]);
-			free(fd_backup[fd]); /*free backup*/
+	/* There is no more to read and no line ===> SEND ALL*/
 		
-		return (0);
+		if (!(*line = ft_strnew(cut)))
+				return (-1);
+		ft_strncpy(&*line,fd_backup[fd], cut); /*copy backup[:cut] to line*/
+		
+		free(fd_backup[fd]); /*free backup*/
+	return (0);
 }
 

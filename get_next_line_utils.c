@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:41 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/19 16:40:54 by roberto          ###   ########.fr       */
+/*   Updated: 2020/06/22 18:55:44 by rarce            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,34 +107,34 @@ char	*ft_substr( char *tab, int size)
 /*--------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------------*/
 
-void ft_strncpy(char *dst,char *src, int size)
+void ft_strncpy(char **dst,char *src, int size)
 {
 	int counter;
 	int start;
 
 	counter = 0;
 	start = 0;
-	while(dst[start] != '\0')
+	while(*dst[start] != '\0')
 		start++;
 	while(size-- && src[counter] != '\0')
 	{
-		dst[start + counter] = src[counter];
+		*dst[start + counter] = src[counter];
 		counter++;	
 	}
-	dst[start + counter] = '\0';
+	*dst[start + counter] = '\0';
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------------*/
 
-int ft_findchar(char *tab, char c)
+int ft_findnl(char *tab)
 {
 	int counter;
 	
 	counter = 0;
-	while (tab && tab[counter] != '\0')
+	while (tab[counter] != '\0')
 	{
-		if (tab[counter] == c)
+		if (tab[counter] == '\n')
 			return(counter);
 		counter++;
 	}
@@ -149,6 +149,7 @@ char *ft_strjoin(char **a, char *b, int cut_pos)
 {
 	char	*ptr;
 	int		start;
+	char	*ptrb;
 
 /*Joins a and b (until cut_pos) into a new str 
  *if A is missing: frees A + creates new A + adds B(until cut) + returns new A
@@ -164,8 +165,9 @@ char *ft_strjoin(char **a, char *b, int cut_pos)
 	if (!(ptr = ft_strnew(start + cut_pos)))
 		return (NULL);
 
-	ft_strncpy(&*ptr, *a, start);
-	ft_strncpy(&ptr[start + 1], b, cut_pos);
+	ft_strncpy(&ptr, *a, start);
+	ptrb = &ptr[start + 1];
+	ft_strncpy(&ptrb, b, cut_pos);
 	free (*a);
 	*a = ptr;
 	return (*a);

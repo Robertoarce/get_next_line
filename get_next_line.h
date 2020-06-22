@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:25 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/19 13:17:09 by roberto          ###   ########.fr       */
+/*   Updated: 2020/06/22 18:43:05 by rarce            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int		ft_strlen(char *tab);
 char	*ft_strnew(int size);
 char	*ft_substr( char *tab, int size);
 char	*ft_strjoin(char **fd_backup, char *b, int cut_pos);
-int		ft_findchar(char *tab, char c);
-void	ft_strncpy(char *dst,char *src, int size);
+int		ft_findnl(char *tab);
+void	ft_strncpy(char **dst,char *src, int size);
 	
 
 #endif
