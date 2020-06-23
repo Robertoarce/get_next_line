@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:41 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/22 18:55:44 by rarce            ###   ########.fr       */
+/*   Updated: 2020/06/23 17:44:33 by roberto          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,11 @@ char	*ft_strnew(int size)
 	counter = 0;
 	if (!(ptr = (char *)malloc(sizeof(char) * (size + 1))))
 		return (NULL);
-	while (size-- + 1)
-		ptr[counter++] = '\0';
+	while (counter < size + 1 )
+	{
+		ptr[counter] = '\0';
+		counter++;
+	}
 	return (ptr);
 }
 
@@ -100,28 +103,30 @@ char	*ft_substr( char *tab, int size)
 	}
 	ptr[counter] = '\0';
 
-
 	return (ptr);
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------------*/
 
-void ft_strncpy(char **dst,char *src, int size)
+char *ft_strncpy(char *dst,char *src, int size)
 {
 	int counter;
 	int start;
 
+	if (size == -1)
+		size = ft_strlen(src);
 	counter = 0;
 	start = 0;
-	while(*dst[start] != '\0')
+	while(dst[start] != '\0')
 		start++;
 	while(size-- && src[counter] != '\0')
 	{
-		*dst[start + counter] = src[counter];
+		dst[start + counter] = src[counter];
 		counter++;	
 	}
-	*dst[start + counter] = '\0';
+	dst[start + counter] = '\0';
+	return (dst);
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -144,20 +149,20 @@ int ft_findnl(char *tab)
 /*--------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------------*/
 
-
+/*
 char *ft_strjoin(char **a, char *b, int cut_pos)
 {
 	char	*ptr;
 	int		start;
 	char	*ptrb;
 
-/*Joins a and b (until cut_pos) into a new str 
+*Joins a and b (until cut_pos) into a new str 
  *if A is missing: frees A + creates new A + adds B(until cut) + returns new A
  *if B is missing: returns A;
  *else:
  *	creates ptr = A +b(until cut) + free A + a = ptr  + return new A
  */
-
+/*
 	if(!*b )
 		return (*a);
 		
@@ -171,4 +176,4 @@ char *ft_strjoin(char **a, char *b, int cut_pos)
 	free (*a);
 	*a = ptr;
 	return (*a);
-}
+}*/
