@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:41 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/23 17:44:33 by roberto          ###   ########.fr       */
+/*   Updated: 2020/06/25 14:21:39 by roberto          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,12 @@ char	*ft_strnew(int size)
 	counter = 0;
 	if (!(ptr = (char *)malloc(sizeof(char) * (size + 1))))
 		return (NULL);
-	while (counter < size + 1 )
+	while (counter < size)
 	{
 		ptr[counter] = '\0';
 		counter++;
 	}
+	ptr[counter] = '\0';
 	return (ptr);
 }
 
