@@ -6,7 +6,7 @@
 /*   By: roberto <rarce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 18:08:45 by roberto           #+#    #+#             */
-/*   Updated: 2020/06/26 18:36:29 by roberto          ###   ########.fr       */
+/*   Updated: 2020/07/08 15:35:11 by titorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_fillstock(char *buf, char **stock)
 	return (1);
 }
 
-int	ft_isnewline(char **line, char **stock, int cut)
+int	ft_isnewline(char **line, char **stock, int cut, int end)
 {
 	char *tmp;
 
@@ -42,6 +42,18 @@ int	ft_isnewline(char **line, char **stock, int cut)
 	tmp = ft_strncpy(tmp, &(*stock)[cut + 1], -1);
 	free(*stock);
 	*stock = tmp;
+	return (end);
+}
+
+int	ft_initialize(char **fd_stock, char **line)
+{
+	if (!*fd_stock)
+	{
+		if (!(*fd_stock = ft_strnew(0)))
+			return (1);
+	}
+	if (!(*line = ft_strnew(0)))
+		return (-1);
 	return (1);
 }
 
@@ -52,21 +64,22 @@ int	get_next_line(int fd, char **line)
 	int			read_size;
 	int			cut;
 
-	if (!line || fd < 0 || BUFFER_SIZE < 1 || read(fd, buf, 0) < 0)
-		return (-1);
+	if (ft_initialize(&fd_stock[fd], &*line) == -1
+			|| !line || fd < 0 || BUFFER_SIZE < 1)
+		return (FAILURE);
+	cut = ft_findnl(fd_stock[fd]);
+	if (cut > -1)
+		return (ft_isnewline(&*line, &fd_stock[fd], cut, 1));
 	while ((read_size = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[read_size] = '\0';
-		if (ft_fillstock(buf, &fd_stock[fd]) == -1)
-			return (-1);
-		if (ft_findnl(fd_stock[fd]) > -1)
-			break ;
+		if (ft_fillstock(buf, &fd_stock[fd]) == FAILURE)
+			return (FAILURE);
+		cut = ft_findnl(fd_stock[fd]);
+		if (cut > -1)
+			return (ft_isnewline(&*line, &fd_stock[fd], cut, 1));
 	}
-	cut = ft_findnl(fd_stock[fd]);
-	if (cut > -1)
-		return (ft_isnewline(&*line, &fd_stock[fd], cut));
-	if (!(*line = ft_strnew(ft_strlen(fd_stock[fd]) + 1)))
-		return (-1);
-	*line = ft_strncpy(*line, fd_stock[fd], -1);
+	if (cut > 0)
+		return (ft_isnewline(&*line, &fd_stock[fd], cut, 1));
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:41 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/26 18:46:17 by roberto          ###   ########.fr       */
+/*   Updated: 2020/07/08 15:46:49 by titorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*ft_strnew(int size)
 	int		counter;
 
 	counter = 0;
-	if (!(ptr = (char *)malloc(sizeof(char) * (size + 1))))
+	if (!(ptr = (char *)malloc(sizeof(char *) * (size + 1))))
 		return (NULL);
 	while (counter < size)
 	{
@@ -79,12 +79,15 @@ int		ft_findnl(char *tab)
 {
 	int counter;
 
-	counter = 0;
-	while (tab[counter] != '\0')
+	if (tab != NULL)
 	{
-		if (tab[counter] == '\n')
-			return (counter);
-		counter++;
+		counter = 0;
+		while (tab[counter] != '\0')
+		{
+			if (tab[counter] == '\n')
+				return (counter);
+			counter++;
+		}
 	}
 	return (-1);
 }

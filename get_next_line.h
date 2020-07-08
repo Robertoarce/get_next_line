@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:25 by rarce             #+#    #+#             */
-/*   Updated: 2020/06/26 18:39:11 by roberto          ###   ########.fr       */
+/*   Updated: 2020/07/06 17:52:07 by titorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 32
+#  define BUFFER_SIZE	4800
 # endif
 
-# define SUCCESS 1
-# define FAILURE 0
-# define TRUE 1
-# define FALSE 0
+# define SUCCESS		0
+# define FAILURE		-1
+# define TRUE			1
+# define FALSE			0
 
 # include <unistd.h>
 # include <stdlib.h>
