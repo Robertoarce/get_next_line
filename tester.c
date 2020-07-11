@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/04 10:47:06 by rarce             #+#    #+#             */
-/*   Updated: 2020/07/06 15:53:43 by titorium         ###   ########.fr       */
+/*   Updated: 2020/07/11 13:50:47 by titorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <fcntl.h>
@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 	printf("%d |%s\n", r, l);
 	if (l)
 		free(l);
+	close(fd);
 	//while(1);
 	return (0);
 }
