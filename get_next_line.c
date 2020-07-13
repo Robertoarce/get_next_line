@@ -6,7 +6,7 @@
 /*   By: roberto <rarce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 18:08:45 by roberto           #+#    #+#             */
-/*   Updated: 2020/07/11 16:38:43 by titorium         ###   ########.fr       */
+/*   Updated: 2020/07/13 16:52:34 by titorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	ft_fillstock(char *buf, char **stock)
 
 int	ft_nl(char **line, char **stock, int cut, int end)
 {
-	char *tmp;
+	char	*tmp;
 
 	if (!(*line = ft_strnew(cut)))
 		return (-1);
@@ -45,12 +45,13 @@ int	ft_nl(char **line, char **stock, int cut, int end)
 	return (end);
 }
 
-int	ft_isnewline3(char **line, char **stock, int cut, int end)
+int	ft_nl3(char **line, char **stock, int cut, int end)
 {
 	if (!(*line = ft_strnew(cut)))
 		return (-1);
 	*line = ft_strncpy(*line, *stock, cut);
-	*stock[0] = '\0';
+	free(*stock);
+	*stock = ft_strnew(0);
 	return (end);
 }
 
@@ -60,25 +61,23 @@ int	get_next_line(int fd, char **line)
 	char		buf[BUFFER_SIZE + 1];
 	int			read_size;
 
-	if ((!line) || (line == 0) || (fd < 0) || (BUFFER_SIZE < 1))
-		return (FAILURE);
-	*line = ft_strnew(0);
+	if (!(*line = NULL) && (BUFFER_SIZE < 1 || read(fd, buf, 0)))
+		return (-1);
 	while (1)
 	{
 		if (ft_findnl(fd_stock[fd]) > -1)
 			return (ft_nl(&*line, &fd_stock[fd], ft_findnl(fd_stock[fd]), 1));
-		if ((read_size = read(fd, buf, BUFFER_SIZE)) > 0)
-		{
-			buf[read_size] = '\0';
-			if (ft_fillstock(buf, &fd_stock[fd]) == FAILURE)
-				return (FAILURE);
-		}
-		else
+		if ((read_size = read(fd, buf, BUFFER_SIZE)) <= 0)
 			break ;
+		buf[read_size] = '\0';
+		if (ft_fillstock(buf, &fd_stock[fd]) == FAILURE)
+			return (FAILURE);
 	}
 	if (read_size == -1)
 		return (-1);
 	if (ft_findnl(fd_stock[fd]) >= 0)
 		return (ft_nl(&*line, &fd_stock[fd], ft_findnl(fd_stock[fd]), 1));
-	return (ft_isnewline3(&*line, &fd_stock[fd], ft_strlen(fd_stock[fd]), 0));
+	if (fd_stock[fd])
+		return (ft_nl3(&*line, &fd_stock[fd], ft_strlen(fd_stock[fd]), 0));
+	return (ft_nl3(&*line, &fd_stock[fd], 0, 0));
 }

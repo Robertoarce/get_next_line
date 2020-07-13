@@ -6,7 +6,7 @@
 /*   By: rarce <rarce@42.student.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/19 17:04:41 by rarce             #+#    #+#             */
-/*   Updated: 2020/07/11 13:54:08 by titorium         ###   ########.fr       */
+/*   Updated: 2020/07/13 15:05:04 by titorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int		ft_strlen(char *tab)
 {
 	int counter;
 
+	if (!*tab || !tab)
+		return(0);
 	counter = 0;
 	while (tab[counter] != '\0')
 		counter++;
