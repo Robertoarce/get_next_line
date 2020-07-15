@@ -6,7 +6,7 @@
 /*   By: roberto <rarce@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/08 18:08:45 by roberto           #+#    #+#             */
-/*   Updated: 2020/07/13 16:52:34 by titorium         ###   ########.fr       */
+/*   Updated: 2020/07/15 11:27:09 by titorium         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ int	ft_nl(char **line, char **stock, int cut, int end)
 	return (end);
 }
 
-int	ft_nl3(char **line, char **stock, int cut, int end)
+int	ft_nl2(char **line, char **stock, int cut, int end)
 {
 	if (!(*line = ft_strnew(cut)))
 		return (-1);
 	*line = ft_strncpy(*line, *stock, cut);
 	free(*stock);
-	*stock = ft_strnew(0);
+	*stock = '\0';
 	return (end);
 }
 
@@ -78,6 +78,6 @@ int	get_next_line(int fd, char **line)
 	if (ft_findnl(fd_stock[fd]) >= 0)
 		return (ft_nl(&*line, &fd_stock[fd], ft_findnl(fd_stock[fd]), 1));
 	if (fd_stock[fd])
-		return (ft_nl3(&*line, &fd_stock[fd], ft_strlen(fd_stock[fd]), 0));
-	return (ft_nl3(&*line, &fd_stock[fd], 0, 0));
+		return (ft_nl2(&*line, &fd_stock[fd], ft_strlen(fd_stock[fd]), 0));
+	return (ft_nl2(&*line, &fd_stock[fd], 0, 0));
 }
