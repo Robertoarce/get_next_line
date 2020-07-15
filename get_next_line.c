@@ -51,7 +51,7 @@ int	ft_nl2(char **line, char **stock, int cut, int end)
 		return (-1);
 	*line = ft_strncpy(*line, *stock, cut);
 	free(*stock);
-	*stock = '\0';
+	*stock = NULL;
 	return (end);
 }
 
